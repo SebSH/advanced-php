@@ -1,31 +1,28 @@
+
 <?php
-
+use core\Routing;
 require 'conf.inc.php';
-
 function myAutoloader($class)
 {
-    $classPath = 'core/'.$class.'.class.php';
-    $classModel = 'models/'.$class.'.class.php';
+    $classPath = str_replace('\\', DIRECTORY_SEPARATOR, $class).'.class.php';
+    $classModel = str_replace('\\', DIRECTORY_SEPARATOR, $class).'.class.php';
     if (file_exists($classPath)) {
         include $classPath;
     } elseif (file_exists($classModel)) {
         include $classModel;
     }
 }
-
 // La fonction myAutoloader est lancé sur la classe appelée n'est pas trouvée
 spl_autoload_register('myAutoloader');
-
 // Récupération des paramètres dans l'url - Routing
 $slug = explode('?', $_SERVER['REQUEST_URI'])[0];
 $routes = Routing::getRoute($slug);
 extract($routes);
-
 $container = require 'config/di.global.php';
-
 // Vérifie l'existence du fichier et de la classe pour charger le controlleur
 if (file_exists($cPath)) {
     include $cPath;
+    $c = 'controllers\\' . $c;
     if (class_exists($c)) {
         //instancier dynamiquement le controller
         $cObject = $container[$c]($container);

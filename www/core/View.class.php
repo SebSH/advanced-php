@@ -1,5 +1,7 @@
 <?php
 
+namespace core;
+
 class View
 {
     private $v;
